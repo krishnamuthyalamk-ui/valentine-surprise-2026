@@ -151,6 +151,26 @@
       opacity:.8;
     }
 
+    /* “Please press Yes” bubble */
+    .plea{
+      margin: 10px auto 0;
+      display:none;
+      width: fit-content;
+      max-width: 90%;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.14);
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow: 0 14px 35px rgba(0,0,0,.28);
+      font-weight: 800;
+      opacity:.95;
+      animation: pop .18s ease;
+    }
+    @keyframes pop{
+      from{ transform: scale(.96); opacity:.5; }
+      to{ transform: scale(1); opacity:.95; }
+    }
+
     /* Popup */
     .overlay{
       position:fixed; inset:0;
@@ -203,7 +223,7 @@
       z-index:6; pointer-events:none;
     }
 
-    /* Hidden YouTube iframe */
+    /* Hidden YouTube iframe (optional) */
     #musicFrame{
       position:fixed;
       width:1px; height:1px;
@@ -234,6 +254,8 @@
         <button class="no" id="noBtn">No</button>
       </div>
 
+      <div class="plea" id="plea">Please press <b>Yes</b> 😊</div>
+
       <div class="footer">P.S. Click “Yes” 😉</div>
     </div>
   </div>
@@ -250,7 +272,7 @@
     </div>
   </div>
 
-  <!-- Replace VIDEO_ID_HERE with the YouTube video ID -->
+  <!-- Optional: YouTube background audio (can ignore) -->
   <iframe id="musicFrame"
     src="https://www.youtube.com/embed/coofEBXnhZIlzGsO?autoplay=1&loop=1&playlist=VIDEO_ID_HERE"
     allow="autoplay">
@@ -273,10 +295,34 @@
     setInterval(spawnHearts, 320);
     for(let i=0;i<14;i++) setTimeout(spawnHearts, i*150);
 
-    // No button runs away (mouse + touch)
-    const noBtn = document.getElementById("noBtn");
-    noBtn.addEventListener("mouseover", () => moveNo(noBtn));
-    noBtn.addEventListener("touchstart", (e) => { e.preventDefault(); moveNo(noBtn); }, {passive:false});
+    // Elements
+    const overlay = document.getElementById("overlay");
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn  = document.getElementById("noBtn");
+    const musicFrame = document.getElementById("musicFrame");
+    const plea = document.getElementById("plea");
+
+    // “Please press Yes” repeat 6 times
+    let pleaCount = 0;
+    function showPlea(){
+      if(pleaCount >= 6) return; // stop after 6
+      pleaCount++;
+
+      plea.style.display = "block";
+      plea.textContent = `Please press Yes 😊 (${pleaCount}/6)`;
+
+      clearTimeout(showPlea._t);
+      showPlea._t = setTimeout(()=>{ plea.style.display="none"; }, 1200);
+    }
+
+    // No button runs away + shows message
+    noBtn.addEventListener("mouseover", () => { moveNo(noBtn); showPlea(); });
+    noBtn.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      moveNo(noBtn);
+      showPlea();
+    }, {passive:false});
+
     function moveNo(btn){
       btn.style.position = "fixed";
       const pad = 20;
@@ -288,28 +334,25 @@
       btn.style.top  = y + "px";
     }
 
-    // Popup + music + fireworks on YES
-    const overlay = document.getElementById("overlay");
-    const yesBtn = document.getElementById("yesBtn");
-    const musicFrame = document.getElementById("musicFrame");
-
+    // YES click: popup + try to play audio + fireworks
     yesBtn.addEventListener("click", () => {
-      // Show popup
       overlay.style.display = "grid";
       overlay.setAttribute("aria-hidden","false");
 
-      // Start music ONLY after click: reload iframe so autoplay triggers
+      // Optional YouTube autoplay attempt
       const src = musicFrame.getAttribute("src");
       musicFrame.setAttribute("src", src);
 
-      // Fireworks burst
-      startFireworks(3600);
+      // Play local mp3
       const audio = document.getElementById("loveSong");
-audio.play();
+      audio.play().catch(()=>{});
+
+      startFireworks(3600);
     });
 
     document.getElementById("close").addEventListener("click", closePopup);
     overlay.addEventListener("click", (e)=>{ if(e.target===overlay) closePopup(); });
+
     function closePopup(){
       overlay.style.display="none";
       overlay.setAttribute("aria-hidden","true");
@@ -379,6 +422,8 @@ audio.play();
       }, ms);
     }
   </script>
-  <audio id="loveSong" src="love.mp3" preload="auto"></audio>
+
+  <!-- IMPORTANT: Your uploaded file is Love.mp3 (capital L) -->
+  <audio id="loveSong" src="Love.mp3" preload="auto"></audio>
 </body>
 </html>
