@@ -2,43 +2,44 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
   <title>For Seraine ❤️</title>
+
   <style>
     :root{
-      --glass: rgba(255,255,255,.10);
-      --border: rgba(255,255,255,.18);
-      --shadow: rgba(0,0,0,.55);
       --pink1:#ff4fa6;
       --pink2:#ff9ad5;
       --purple1:#3b1a7a;
       --purple2:#7a1537;
+      --glass: rgba(255,255,255,.10);
+      --border: rgba(255,255,255,.18);
+      --shadow: rgba(0,0,0,.55);
+      --text: rgba(255,255,255,.95);
     }
+
     *{ box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
     html,body{ height:100%; }
     body{
-      margin:0; overflow:hidden;
+      margin:0;
+      overflow:hidden;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color:#fff;
+      color:var(--text);
       background:
-        radial-gradient(900px 700px at 18% 25%, rgba(255,80,180,.22) 0%, transparent 60%),
-        radial-gradient(900px 700px at 82% 70%, rgba(255,80,120,.18) 0%, transparent 55%),
-        radial-gradient(900px 600px at 20% 20%, rgba(59,26,122,.75) 0%, transparent 60%),
-        radial-gradient(900px 600px at 80% 70%, rgba(122,21,55,.75) 0%, transparent 55%),
+        radial-gradient(900px 600px at 18% 25%, var(--purple1) 0%, transparent 60%),
+        radial-gradient(900px 600px at 82% 70%, var(--purple2) 0%, transparent 55%),
         linear-gradient(135deg,#050717,#0b1020);
     }
 
-    /* Cinematic vignette + grain */
     .vignette{
       position:fixed; inset:0; pointer-events:none; z-index:1;
-      background: radial-gradient(circle at center, transparent 40%, rgba(0,0,0,.62) 100%);
+      background: radial-gradient(circle at center, rgba(0,0,0,0) 40%, rgba(0,0,0,.62) 100%);
     }
     .grain{
       position:fixed; inset:-200px; pointer-events:none; z-index:2;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
       opacity:.10;
-      animation: grainMove 6s steps(10) infinite;
       mix-blend-mode: overlay;
+      animation: grainMove 6s steps(10) infinite;
     }
     @keyframes grainMove{
       0%{ transform:translate(0,0); }
@@ -49,267 +50,263 @@
       100%{ transform:translate(0,0); }
     }
 
-    /* Floating hearts (background) */
-    .float-heart{
-      position:fixed; left:var(--x); bottom:-40px;
-      width:var(--s); height:var(--s);
-      transform: rotate(45deg);
-      background: rgba(255, 90, 140, .14);
-      border:1px solid rgba(255, 180, 205, .20);
-      border-radius: 14px;
-      animation: rise var(--t) linear infinite;
-      opacity:.7;
-      z-index:0;
-      pointer-events:none;
-      filter: blur(.2px);
+    .bokeh{
+      position:fixed; inset:0; z-index:0; pointer-events:none;
+      filter: blur(2px);
+      opacity:.35;
     }
-    .float-heart:before,.float-heart:after{
-      content:""; position:absolute; width:100%; height:100%;
-      background: rgba(255, 90, 140, .14);
-      border:1px solid rgba(255, 180, 205, .20);
-      border-radius:50%;
+    .bokeh span{
+      position:absolute;
+      width:220px; height:220px;
+      background: radial-gradient(circle, rgba(255,120,170,.55), rgba(255,120,170,0) 60%);
+      border-radius:999px;
+      animation: drift 10s ease-in-out infinite;
     }
-    .float-heart:before{ left:-50%; top:0; }
-    .float-heart:after{ left:0; top:-50%; }
-    @keyframes rise{
-      to { transform: translateY(-120vh) rotate(45deg); opacity:0; }
+    .bokeh span:nth-child(1){ left:8%; top:10%; animation-duration: 11s; }
+    .bokeh span:nth-child(2){ left:70%; top:18%; animation-duration: 12s; }
+    .bokeh span:nth-child(3){ left:20%; top:70%; animation-duration: 13s; }
+    .bokeh span:nth-child(4){ left:78%; top:68%; animation-duration: 14s; }
+    @keyframes drift{
+      0%,100%{ transform: translate(0,0) scale(1); }
+      50%{ transform: translate(18px,-12px) scale(1.08); }
     }
 
-    /* Canvas layers */
-    #fxFireworks, #fxConfetti{
-      position:fixed; inset:0;
-      pointer-events:none;
-    }
-    #fxFireworks{ z-index:7; }
-    #fxConfetti{ z-index:8; }
-
-    /* Main wrap */
     .wrap{
       position:relative; z-index:3;
-      height:100dvh; display:grid; place-items:center;
+      height:100%;
+      display:grid;
+      place-items:center;
       padding:18px;
     }
 
-    /* Cinematic card with heartbeat 3D glow */
     .card{
-      width:min(780px, 94vw);
+      width:min(760px, 94vw);
       border-radius:26px;
-      padding:30px 22px 22px;
+      background: var(--glass);
+      border: 1px solid var(--border);
+      box-shadow: 0 28px 90px var(--shadow);
+      backdrop-filter: blur(16px);
+      padding:28px 22px 22px;
       text-align:center;
       position:relative;
-      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
-      border:1px solid var(--border);
-      box-shadow: 0 30px 110px var(--shadow);
-      backdrop-filter: blur(16px);
+      overflow:hidden;
       transform-style: preserve-3d;
-      animation: floatCard 5.5s ease-in-out infinite;
     }
-    @keyframes floatCard{
-      0%,100%{ transform: translateY(0px); }
-      50%{ transform: translateY(-6px); }
-    }
+
     .card::before{
       content:"";
       position:absolute; inset:-2px;
-      border-radius:28px;
-      background: radial-gradient(700px 400px at 50% 20%, rgba(255,79,166,.35), transparent 60%),
-                  radial-gradient(700px 400px at 30% 80%, rgba(255,154,213,.22), transparent 60%);
-      filter: blur(14px);
-      opacity:.9;
+      background:
+        radial-gradient(800px 380px at 50% 20%, rgba(255,95,160,.22), transparent 65%),
+        radial-gradient(600px 320px at 30% 85%, rgba(255,154,213,.14), transparent 60%);
+      filter: blur(2px);
       z-index:-1;
-      animation: heartbeatGlow 1.15s ease-in-out infinite;
+      animation: heartGlow 1.25s ease-in-out infinite;
     }
-    .card::after{
-      content:"";
-      position:absolute; inset:0;
-      border-radius:26px;
-      background: radial-gradient(1000px 500px at 50% 10%, rgba(255,255,255,.10), transparent 60%);
-      pointer-events:none;
-      opacity:.9;
-    }
-    @keyframes heartbeatGlow{
-      0%,100%{ transform: scale(1); filter: blur(14px); opacity:.85; }
-      50%{ transform: scale(1.03); filter: blur(18px); opacity:1; }
+    @keyframes heartGlow{
+      0%,100%{ transform: translateZ(0) scale(1); opacity:.85; }
+      50%{ transform: translateZ(8px) scale(1.03); opacity:1; }
     }
 
     .title{
       margin:0;
-      letter-spacing:.28em;
+      letter-spacing:.25em;
       text-transform:uppercase;
       font-size:12px;
-      opacity:.85;
+      opacity:.82;
     }
     .big{
-      margin:14px 0 6px;
-      font-size: clamp(28px, 5vw, 48px);
-      font-weight:950;
+      margin:12px 0 6px;
+      font-size: clamp(30px, 5vw, 50px);
+      font-weight:1000;
       line-height:1.05;
       text-shadow: 0 18px 55px rgba(0,0,0,.5);
     }
     .divider{
       width:140px; height:2px;
-      margin:16px auto;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,.8), transparent);
+      margin:14px auto;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.75), transparent);
       opacity:.75;
     }
     .sub{
       margin:10px auto 0;
       max-width: 56ch;
       opacity:.95;
-      line-height:1.55;
+      line-height:1.6;
       font-size:16px;
     }
     .question{
-      margin-top:14px;
-      font-size:22px;
-      font-weight:950;
-      letter-spacing:.02em;
+      margin-top:16px;
+      font-size: clamp(22px, 3.6vw, 34px);
+      font-weight:1000;
     }
 
-    .row{ margin-top:18px; display:flex; justify-content:center; gap:14px; flex-wrap:wrap; }
+    .btnArea{
+      margin-top:18px;
+      display:flex;
+      gap:14px;
+      justify-content:center;
+      flex-wrap:wrap;
+      position:relative;
+      padding-bottom:10px;
+    }
 
     button{
       padding:12px 22px;
       border:none;
       border-radius:999px;
       font-size:16px;
-      font-weight:950;
+      font-weight:1000;
       cursor:pointer;
-      box-shadow: 0 14px 35px rgba(0,0,0,.30);
-      transition: transform .12s ease, filter .2s ease, opacity .2s ease;
+      box-shadow: 0 14px 35px rgba(0,0,0,.28);
+      transition: transform .12s ease, filter .12s ease, opacity .12s ease;
       position:relative;
+      overflow:hidden;
+      user-select:none;
+      touch-action: manipulation;
     }
     button:active{ transform: scale(.98); }
 
+    button::after{
+      content:"";
+      position:absolute; inset:-30%;
+      background: conic-gradient(from 90deg,
+        rgba(255,255,255,0),
+        rgba(255,255,255,.55),
+        rgba(255,255,255,0),
+        rgba(255,255,255,.35),
+        rgba(255,255,255,0)
+      );
+      opacity:.18;
+      transform: rotate(0deg);
+      animation: sparkle 2.2s linear infinite;
+      pointer-events:none;
+    }
+    @keyframes sparkle{
+      0%{ transform: rotate(0deg); }
+      100%{ transform: rotate(360deg); }
+    }
+
     .yes{
-      background: linear-gradient(90deg,#ffe0ea,#ff6b9a);
+      background: linear-gradient(90deg,#ffe0ea,var(--pink1));
       color:#1a0b2e;
-      filter: saturate(1.05);
+      filter: drop-shadow(0 12px 24px rgba(255,79,166,.22));
     }
     .yes.locked{
       opacity:.55;
-      filter: grayscale(.2) saturate(.75);
+      filter: grayscale(.1) brightness(.95);
       cursor:not-allowed;
-    }
-    .yes.unlocked{
-      animation: yesHype 1.1s ease-in-out infinite;
-    }
-    @keyframes yesHype{
-      0%,100%{ transform: translateY(0); filter: drop-shadow(0 0 0 rgba(255,105,180,0)); }
-      50%{ transform: translateY(-2px); filter: drop-shadow(0 0 18px rgba(255,105,180,.45)); }
     }
 
     .no{
       background: rgba(255,255,255,.14);
-      color:#fff;
-      border:1px solid rgba(255,255,255,.20);
-    }
-
-    /* Pink glow trail for NO */
-    .trail{
-      position:fixed;
-      width:18px; height:18px;
-      border-radius:999px;
-      pointer-events:none;
-      z-index:9;
-      background: radial-gradient(circle, rgba(255,79,166,.55), rgba(255,79,166,0) 70%);
-      filter: blur(1px);
-      animation: trailFade 520ms ease-out forwards;
-    }
-    @keyframes trailFade{
-      from{ transform: scale(1); opacity:.95; }
-      to{ transform: scale(2.6); opacity:0; }
-    }
-
-    /* Sparkles */
-    .spark{
-      position:fixed;
-      width:6px; height:6px;
-      border-radius:999px;
-      pointer-events:none;
-      z-index:10;
-      background: radial-gradient(circle, rgba(255,255,255,.95), rgba(255,255,255,0) 70%);
-      animation: sparkFly 520ms ease-out forwards;
-    }
-    @keyframes sparkFly{
-      from{ transform: translate(0,0) scale(1); opacity:1; }
-      to{ transform: translate(var(--dx), var(--dy)) scale(.2); opacity:0; }
-    }
-
-    /* Small pop message under NO button */
-    .noPop{
-      position:fixed;
-      left:0; top:0;
-      transform: translate(-50%, 0);
-      padding:8px 12px;
-      border-radius:14px;
-      font-size:14px;
-      font-weight:800;
-      letter-spacing:.01em;
-      background: rgba(255,255,255,.14);
       border:1px solid rgba(255,255,255,.18);
-      backdrop-filter: blur(12px);
-      box-shadow: 0 12px 40px rgba(0,0,0,.35);
-      z-index:11;
-      opacity:0;
-      pointer-events:none;
-    }
-    .noPop.show{ animation: popIn 900ms ease forwards; }
-    @keyframes popIn{
-      0%{ opacity:0; transform: translate(-50%, 10px) scale(.96); }
-      18%{ opacity:1; transform: translate(-50%, 0px) scale(1); }
-      70%{ opacity:1; }
-      100%{ opacity:0; transform: translate(-50%, -8px) scale(.98); }
+      color:#fff;
+      filter: drop-shadow(0 12px 24px rgba(255,154,213,.12));
     }
 
     .footer{
-      margin-top:16px;
+      margin-top:14px;
       font-size:13px;
-      opacity:.85;
+      opacity:.82;
     }
 
-    /* Modal */
+    .noPop{
+      position:absolute;
+      left:50%;
+      transform: translateX(-50%);
+      top: calc(100% + 8px);
+      background: rgba(0,0,0,.35);
+      border:1px solid rgba(255,255,255,.18);
+      padding:8px 12px;
+      border-radius:14px;
+      font-size:14px;
+      opacity:0;
+      pointer-events:none;
+      white-space:nowrap;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 12px 30px rgba(0,0,0,.25);
+      transition: opacity .18s ease, transform .18s ease;
+    }
+    .noPop.show{
+      opacity:1;
+      transform: translateX(-50%) translateY(-2px);
+    }
+
+    .trailDot{
+      position:fixed;
+      width:14px; height:14px;
+      border-radius:999px;
+      pointer-events:none;
+      z-index:7;
+      background: radial-gradient(circle, rgba(255,154,213,.9), rgba(255,154,213,0) 65%);
+      filter: blur(.2px);
+      animation: fadeTrail .55s ease-out forwards;
+    }
+    @keyframes fadeTrail{
+      to{ transform: scale(2.2); opacity:0; }
+    }
+
+    .shake{
+      animation: shake .28s ease-in-out;
+    }
+    @keyframes shake{
+      0%{ transform: translateX(0); }
+      20%{ transform: translateX(-8px); }
+      40%{ transform: translateX(8px); }
+      60%{ transform: translateX(-6px); }
+      80%{ transform: translateX(6px); }
+      100%{ transform: translateX(0); }
+    }
+
+    #fx, #confetti{
+      position:fixed; inset:0;
+      pointer-events:none;
+    }
+    #fx{ z-index:6; }
+    #confetti{ z-index:5; }
+
     .overlay{
       position:fixed; inset:0;
-      display:none; place-items:center;
+      display:none;
+      place-items:center;
       background: rgba(0,0,0,.62);
       z-index:12;
     }
     .overlay.show{ display:grid; }
     .modal{
-      width:min(620px, 94vw);
-      border-radius:24px;
+      width:min(600px, 94vw);
+      border-radius:26px;
       background: rgba(255,255,255,.10);
       border: 1px solid rgba(255,255,255,.18);
-      box-shadow: 0 30px 110px rgba(0,0,0,.65);
+      box-shadow: 0 30px 90px rgba(0,0,0,.65);
       backdrop-filter: blur(18px);
-      padding:28px 18px;
+      padding:28px 18px 22px;
       text-align:center;
       position:relative;
       overflow:hidden;
-      animation: modalIn .35s ease-out both;
-    }
-    @keyframes modalIn{
-      from{ transform: translateY(10px) scale(.98); opacity:0; }
-      to{ transform: translateY(0) scale(1); opacity:1; }
     }
     .x{
       position:absolute; top:10px; right:10px;
-      width:40px; height:40px; border-radius:999px; border:0;
+      width:40px; height:40px;
+      border-radius:999px;
+      border:0;
       background: rgba(255,255,255,.16);
-      color:#fff; cursor:pointer; font-size:18px;
+      color:#fff;
+      cursor:pointer;
+      font-size:18px;
     }
     .heartBig{
       font-size:64px;
-      animation:pulse 1.05s infinite ease-in-out;
-      filter: drop-shadow(0 14px 34px rgba(255,100,140,.35));
+      filter: drop-shadow(0 14px 36px rgba(255,100,140,.35));
+      animation: pulse 1.05s ease-in-out infinite;
     }
     @keyframes pulse{
-      0%,100% { transform: scale(1); }
-      50% { transform: scale(1.16); }
+      0%,100%{ transform: scale(1); }
+      50%{ transform: scale(1.18); }
     }
     .msg{
-      margin:10px 0 8px;
+      margin:12px 0 6px;
       font-size:22px;
       font-weight:1000;
     }
@@ -317,20 +314,19 @@
       margin:0 auto;
       max-width: 54ch;
       line-height:1.65;
-      opacity:.97;
+      opacity:.95;
       font-size:16px;
-    }
-    .signature{
-      margin-top:14px;
-      font-weight:950;
-      letter-spacing:.02em;
     }
   </style>
 </head>
 
 <body>
-  <canvas id="fxFireworks"></canvas>
-  <canvas id="fxConfetti"></canvas>
+  <div class="bokeh" aria-hidden="true">
+    <span></span><span></span><span></span><span></span>
+  </div>
+
+  <canvas id="confetti"></canvas>
+  <canvas id="fx"></canvas>
 
   <div class="grain"></div>
   <div class="vignette"></div>
@@ -347,62 +343,38 @@
 
       <div class="question">Will you be my Valentine?</div>
 
-      <div class="row">
+      <div class="btnArea" id="btnArea">
         <button class="yes locked" id="yesBtn" aria-disabled="true">Yes</button>
-        <button class="no" id="noBtn">No</button>
+
+        <div style="position:relative; display:inline-block;">
+          <button class="no" id="noBtn">No</button>
+          <div class="noPop" id="noPop">Think about it… again 😏</div>
+        </div>
       </div>
 
-      <div class="footer" id="footerText">P.S. Your “No” button is a little shy 😉</div>
+      <div class="footer" id="footerText">P.S. Try the “No” button… if you can 😉</div>
     </div>
   </div>
-
-  <div class="noPop" id="noPop"></div>
 
   <div class="overlay" id="overlay" aria-hidden="true">
     <div class="modal" role="dialog" aria-modal="true">
       <button class="x" id="close" aria-label="Close">✕</button>
       <div class="heartBig">❤️</div>
-      <div class="msg">You just made my whole day, Seraine 🥺💗</div>
+      <div class="msg">Happy Valentine’s Day, Seraine ❤️</div>
       <p class="note">
-        I don’t want a perfect Valentine’s…<br/>
-        I want <b>you</b> — every day, in every mood, in every season.<br/><br/>
-        Thank you for being my favorite person.
+        You just made my whole world smile 😌<br/>
+        I choose you — today, tomorrow, always.<br/><br/>
+        Love, <b>Krishna</b>
       </p>
-      <div class="signature">Love, Krishna</div>
     </div>
   </div>
 
-  <!-- IMPORTANT: your file in repo is "Love.mp3" (Capital L). Keep same name. -->
-  <audio id="loveSong" src="Love.mp3" preload="auto"></audio>
+  <audio id="bgm" src="Love.mp3" preload="auto"></audio>
 
   <script>
-    /* ---------- Background floating hearts ---------- */
-    function spawnHearts(){
-      const h = document.createElement('div');
-      h.className = 'float-heart';
-      const size = Math.floor(14 + Math.random()*30) + 'px';
-      const x = Math.floor(Math.random()*100) + 'vw';
-      const t = (7 + Math.random()*8).toFixed(1) + 's';
-      h.style.setProperty('--s', size);
-      h.style.setProperty('--x', x);
-      h.style.setProperty('--t', t);
-      document.body.appendChild(h);
-      setTimeout(()=>h.remove(), 16000);
-    }
-    setInterval(spawnHearts, 320);
-    for(let i=0;i<14;i++) setTimeout(spawnHearts, i*150);
+    const REQUIRED_NO_CLICKS = 4;
 
-    /* ---------- Elements ---------- */
-    const yesBtn = document.getElementById("yesBtn");
-    const noBtn  = document.getElementById("noBtn");
-    const noPop  = document.getElementById("noPop");
-    const footerText = document.getElementById("footerText");
-    const overlay = document.getElementById("overlay");
-    const loveSong = document.getElementById("loveSong");
-
-    /* ---------- Lock YES until 4 NO clicks ---------- */
-    let noClicks = 0;
-    const messages = [
+    const noMessages = [
       "Think about it… again 😏",
       "No? really? 😌",
       "Try again Raine💗",
@@ -411,297 +383,290 @@
       "Come onnn 😘"
     ];
 
-    function setYesLocked(isLocked){
-      if(isLocked){
+    const card = document.getElementById("card");
+    const btnArea = document.getElementById("btnArea");
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn  = document.getElementById("noBtn");
+    const noPop  = document.getElementById("noPop");
+    const footer = document.getElementById("footerText");
+
+    const overlay = document.getElementById("overlay");
+    const closeBtn = document.getElementById("close");
+
+    const bgm = document.getElementById("bgm");
+
+    let audioUnlocked = false;
+    function unlockAudio(){
+      if (audioUnlocked) return;
+      audioUnlocked = true;
+      bgm.volume = 0.85;
+      bgm.play().then(()=> {
+        bgm.pause();
+        bgm.currentTime = 0;
+      }).catch(()=>{});
+    }
+
+    function blip(){
+      try{
+        const AC = window.AudioContext || window.webkitAudioContext;
+        const ctx = new AC();
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = "triangle";
+        o.frequency.value = 740;
+        g.gain.value = 0.08;
+        o.connect(g); g.connect(ctx.destination);
+        o.start();
+        setTimeout(()=>{ o.frequency.value = 520; }, 55);
+        setTimeout(()=>{ o.stop(); ctx.close(); }, 120);
+      }catch(e){}
+    }
+
+    let noCount = 0;
+    function setYesLocked(locked){
+      if(locked){
         yesBtn.classList.add("locked");
-        yesBtn.classList.remove("unlocked");
-        yesBtn.setAttribute("aria-disabled", "true");
+        yesBtn.setAttribute("aria-disabled","true");
       }else{
         yesBtn.classList.remove("locked");
-        yesBtn.classList.add("unlocked");
-        yesBtn.setAttribute("aria-disabled", "false");
+        yesBtn.setAttribute("aria-disabled","false");
       }
     }
     setYesLocked(true);
 
-    /* ---------- Tiny sound effect (no extra file) ---------- */
-    let audioCtx;
-    function beep(){
-      try{
-        audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
-        const o = audioCtx.createOscillator();
-        const g = audioCtx.createGain();
-        o.type = "triangle";
-        o.frequency.value = 540 + Math.random()*120;
-        g.gain.value = 0.04;
-        o.connect(g); g.connect(audioCtx.destination);
-        o.start();
-        setTimeout(()=>{ o.stop(); }, 70);
-      }catch(e){}
-    }
-
-    /* ---------- Sparkles + trail ---------- */
-    function makeTrail(x,y){
-      const t = document.createElement("div");
-      t.className = "trail";
-      t.style.left = (x-9) + "px";
-      t.style.top  = (y-9) + "px";
-      document.body.appendChild(t);
-      setTimeout(()=>t.remove(), 550);
-    }
-    function sparkles(x,y){
-      const n = 10;
-      for(let i=0;i<n;i++){
-        const s = document.createElement("div");
-        s.className = "spark";
-        const ang = Math.random()*Math.PI*2;
-        const dist = 18 + Math.random()*22;
-        s.style.setProperty("--dx", Math.cos(ang)*dist + "px");
-        s.style.setProperty("--dy", Math.sin(ang)*dist + "px");
-        s.style.left = (x-3) + "px";
-        s.style.top  = (y-3) + "px";
-        document.body.appendChild(s);
-        setTimeout(()=>s.remove(), 600);
+    function spawnTrail(x,y){
+      for(let i=0;i<6;i++){
+        setTimeout(()=>{
+          const d = document.createElement("div");
+          d.className = "trailDot";
+          d.style.left = (x + (Math.random()*10-5)) + "px";
+          d.style.top  = (y + (Math.random()*10-5)) + "px";
+          document.body.appendChild(d);
+          setTimeout(()=> d.remove(), 650);
+        }, i*18);
       }
     }
 
-    /* ---------- Keep NO always visible + not too far ---------- */
-    function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
+    function moveNoButton(playTrail=true){
+      const area = btnArea.getBoundingClientRect();
+      const b = noBtn.getBoundingClientRect();
 
-    function moveNoNear(){
-      const rect = noBtn.getBoundingClientRect();
-      const cx = rect.left + rect.width/2;
-      const cy = rect.top + rect.height/2;
+      const padding = 10;
+      const maxX = Math.max(padding, area.width - b.width - padding);
+      const maxY = Math.max(padding, area.height - b.height - padding);
 
-      // Move "nearby" (playful), not far away
-      const dx = (Math.random() * 220 - 110); // -110..110
-      const dy = (Math.random() * 160 - 80);  // -80..80
+      const x = Math.floor(padding + Math.random() * (maxX - padding));
+      const y = Math.floor(padding + Math.random() * (maxY - padding));
 
-      const pad = 12;
-      const newX = clamp(cx + dx, pad + rect.width/2, window.innerWidth  - pad - rect.width/2);
-      const newY = clamp(cy + dy, pad + rect.height/2, window.innerHeight - pad - rect.height/2);
+      noBtn.style.position = "absolute";
+      noBtn.style.left = x + "px";
+      noBtn.style.top  = y + "px";
 
-      noBtn.style.position = "fixed";
-      noBtn.style.left = (newX - rect.width/2) + "px";
-      noBtn.style.top  = (newY - rect.height/2) + "px";
-
-      // Trail + sparkles + sound
-      makeTrail(newX, newY);
-      sparkles(newX, newY);
-      beep();
-
-      // Show pop under the NO button
-      showNoPop(messages[noClicks % messages.length]);
+      if(playTrail){
+        const cx = b.left + b.width/2;
+        const cy = b.top  + b.height/2;
+        spawnTrail(cx, cy);
+      }
     }
 
+    btnArea.style.position = "relative";
+    noBtn.style.position = "relative";
+
+    let popTimer = null;
     function showNoPop(text){
-      const r = noBtn.getBoundingClientRect();
-      const x = r.left + r.width/2;
-      const y = r.top + r.height + 10;
       noPop.textContent = text;
-      noPop.style.left = x + "px";
-      noPop.style.top  = y + "px";
-      noPop.classList.remove("show");
-      void noPop.offsetWidth; // restart animation
       noPop.classList.add("show");
+      clearTimeout(popTimer);
+      popTimer = setTimeout(()=> noPop.classList.remove("show"), 1200);
     }
 
-    /* NO interactions: click OR hover/touch to dodge */
-    noBtn.addEventListener("mouseover", () => moveNoNear());
-    noBtn.addEventListener("touchstart", (e) => { e.preventDefault(); moveNoNear(); }, {passive:false});
+    function shakeCard(){
+      card.classList.remove("shake");
+      void card.offsetWidth;
+      card.classList.add("shake");
+    }
 
-    // When she actually clicks NO, count it + move again + show message
-    noBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      noClicks++;
+    const conf = document.getElementById("confetti");
+    const cctx = conf.getContext("2d");
+    let confettiOn = false;
+    let confettiPieces = [];
 
-      // Dramatic reactions
-      footerText.textContent = (noClicks < 4)
-        ? "Hmm… are you sure? 😌"
-        : "Okay okay… now you can press YES 😇💗";
+    function confResize(){
+      conf.width = innerWidth * devicePixelRatio;
+      conf.height = innerHeight * devicePixelRatio;
+      cctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+    }
+    addEventListener("resize", confResize);
+    confResize();
 
-      moveNoNear();
-
-      // Unlock YES after 4 clicks
-      if(noClicks >= 4){
-        setYesLocked(false);
-        // little attention grab
-        yesBtn.animate(
-          [{transform:"scale(1)"},{transform:"scale(1.06)"},{transform:"scale(1)"}],
-          {duration:520, iterations:2}
-        );
+    function startConfetti(ms=2600){
+      confettiOn = true;
+      confettiPieces = [];
+      const colors = ["#ff4fa6","#ff9ad5","#ffd1e6","#ffffff","#ff6bb7"];
+      for(let i=0;i<180;i++){
+        confettiPieces.push({
+          x: Math.random()*innerWidth,
+          y: -Math.random()*innerHeight*0.4,
+          r: 2 + Math.random()*4,
+          vy: 2 + Math.random()*4,
+          vx: -1.5 + Math.random()*3,
+          a: 0.7 + Math.random()*0.3,
+          rot: Math.random()*Math.PI*2,
+          vr: -0.2 + Math.random()*0.4,
+          col: colors[Math.floor(Math.random()*colors.length)]
+        });
       }
-    });
+      confTick();
+      setTimeout(()=>{ confettiOn=false; }, ms);
+    }
 
-    /* YES click (only after unlock) */
-    yesBtn.addEventListener("click", async () => {
-      if(yesBtn.getAttribute("aria-disabled") === "true"){
-        // still locked -> nudge (no ugly “4 times” text)
-        yesBtn.animate(
-          [{transform:"translateX(0)"},{transform:"translateX(-6px)"},{transform:"translateX(6px)"},{transform:"translateX(0)"}],
-          {duration:240}
-        );
-        footerText.textContent = "Not so fast… 😌";
+    function confTick(){
+      if(!confettiOn){
+        cctx.clearRect(0,0,innerWidth,innerHeight);
+        return;
+      }
+      cctx.clearRect(0,0,innerWidth,innerHeight);
+      for(const p of confettiPieces){
+        p.x += p.vx;
+        p.y += p.vy;
+        p.rot += p.vr;
+        if(p.y > innerHeight + 30) p.y = -20;
+
+        cctx.save();
+        cctx.globalAlpha = p.a;
+        cctx.translate(p.x, p.y);
+        cctx.rotate(p.rot);
+        cctx.fillStyle = p.col;
+        cctx.fillRect(-p.r, -p.r, p.r*2.2, p.r*1.2);
+        cctx.restore();
+      }
+      requestAnimationFrame(confTick);
+    }
+
+    const fx = document.getElementById("fx");
+    const fctx = fx.getContext("2d");
+    function fxResize(){
+      fx.width = innerWidth * devicePixelRatio;
+      fx.height = innerHeight * devicePixelRatio;
+      fctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+    }
+    addEventListener("resize", fxResize);
+    fxResize();
+
+    let particles=[], running=false;
+    function rand(a,b){ return Math.random()*(b-a)+a; }
+
+    function burst(){
+      const cx = rand(innerWidth*0.2, innerWidth*0.8);
+      const cy = rand(innerHeight*0.12, innerHeight*0.55);
+      const count = Math.floor(rand(70, 120));
+      for(let i=0;i<count;i++){
+        const ang = Math.random()*Math.PI*2;
+        const sp  = rand(2.2, 7.0);
+        particles.push({
+          x:cx, y:cy,
+          vx:Math.cos(ang)*sp,
+          vy:Math.sin(ang)*sp,
+          life:rand(55, 95),
+          age:0,
+          hue:Math.floor(rand(320, 360)),
+          size:rand(1.2,3.0)
+        });
+      }
+    }
+
+    function tick(){
+      if(!running) return;
+      fctx.clearRect(0,0,innerWidth,innerHeight);
+
+      for(let i=particles.length-1;i>=0;i--){
+        const p=particles[i];
+        p.age++;
+        p.vy += 0.035;
+        p.vx *= 0.99; p.vy *= 0.99;
+        p.x += p.vx; p.y += p.vy;
+
+        const a = Math.max(0, 1 - (p.age/p.life));
+        fctx.beginPath();
+        fctx.fillStyle = `hsla(${p.hue}, 95%, 70%, ${a})`;
+        fctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+        fctx.fill();
+
+        if(p.age>=p.life) particles.splice(i,1);
+      }
+      requestAnimationFrame(tick);
+    }
+
+    function startFireworks(ms=3600){
+      if(!running){ running=true; tick(); }
+      const inter=setInterval(burst, 360);
+      burst(); burst();
+      setTimeout(()=>{
+        clearInterval(inter);
+        setTimeout(()=>{
+          particles=[];
+          fctx.clearRect(0,0,innerWidth,innerHeight);
+          running=false;
+        }, 1200);
+      }, ms);
+    }
+
+    function handleNoClick(){
+      unlockAudio();
+      blip();
+
+      noCount++;
+      const msg = noMessages[(noCount-1) % noMessages.length];
+      showNoPop(msg);
+      shakeCard();
+
+      startConfetti(900);
+      moveNoButton(true);
+
+      if(noCount >= REQUIRED_NO_CLICKS){
+        setYesLocked(false);
+        yesBtn.textContent = "Yes 💗";
+        footer.textContent = "Okay okay… now you can click Yes 😌";
+      }else{
+        const left = REQUIRED_NO_CLICKS - noCount;
+        footer.textContent = left === 1 ? "Hmm… try once more 😇" : "Not so fast… 😏";
+      }
+    }
+
+    function handleYes(){
+      if(yesBtn.classList.contains("locked")){
+        shakeCard();
+        startConfetti(900);
+        footer.textContent = "Nope 😌 Try the “No” button first 😉";
         return;
       }
 
+      unlockAudio();
+      bgm.currentTime = 0;
+      bgm.play().catch(()=>{});
+
       overlay.classList.add("show");
       overlay.setAttribute("aria-hidden","false");
-
-      // Start music (iOS requires user gesture -> this is a click so OK)
-      try{
-        loveSong.currentTime = 0;
-        await loveSong.play();
-      }catch(e){ /* ignore */ }
-
-      // Insane level effects
-      startFireworks(3800);
-      startConfetti(5200);
-    });
-
-    document.getElementById("close").addEventListener("click", closePopup);
-    overlay.addEventListener("click", (e)=>{ if(e.target===overlay) closePopup(); });
+      startConfetti(2600);
+      startFireworks(4200);
+    }
 
     function closePopup(){
       overlay.classList.remove("show");
       overlay.setAttribute("aria-hidden","true");
     }
 
-    /* ---------- Fireworks (canvas) ---------- */
-    const fw = document.getElementById("fxFireworks");
-    const fwCtx = fw.getContext("2d");
-    function resizeFW(){ fw.width = innerWidth; fw.height = innerHeight; }
-    addEventListener("resize", resizeFW); resizeFW();
+    closeBtn.addEventListener("click", closePopup);
+    overlay.addEventListener("click", (e)=>{ if(e.target===overlay) closePopup(); });
 
-    let fwParticles = [];
-    let fwRunning = false;
+    noBtn.addEventListener("click", (e)=>{ e.preventDefault(); handleNoClick(); });
+    noBtn.addEventListener("mouseover", ()=> moveNoButton(true));
+    yesBtn.addEventListener("click", (e)=>{ e.preventDefault(); handleYes(); });
 
-    function rand(a,b){ return Math.random()*(b-a)+a; }
+    document.addEventListener("touchstart", unlockAudio, {passive:true, once:true});
+    document.addEventListener("click", unlockAudio, {once:true});
 
-    function fwBurst(){
-      const cx = rand(fw.width*0.2, fw.width*0.8);
-      const cy = rand(fw.height*0.12, fw.height*0.55);
-      const count = Math.floor(rand(80, 120));
-      for(let i=0;i<count;i++){
-        const ang = Math.random()*Math.PI*2;
-        const sp  = rand(2.8, 7.2);
-        fwParticles.push({
-          x:cx, y:cy,
-          vx:Math.cos(ang)*sp,
-          vy:Math.sin(ang)*sp,
-          life:rand(55, 95),
-          age:0,
-          hue:Math.floor(rand(0,360)),
-          size:rand(1.3,3.0)
-        });
-      }
-    }
-
-    function fwTick(){
-      if(!fwRunning) return;
-      fwCtx.clearRect(0,0,fw.width,fw.height);
-
-      for(let i=fwParticles.length-1;i>=0;i--){
-        const p=fwParticles[i];
-        p.age++;
-        p.vy += 0.03;
-        p.vx *= 0.99; p.vy *= 0.99;
-        p.x += p.vx; p.y += p.vy;
-
-        const a = Math.max(0, 1 - (p.age/p.life));
-        fwCtx.beginPath();
-        fwCtx.fillStyle = `hsla(${p.hue}, 95%, 65%, ${a})`;
-        fwCtx.arc(p.x,p.y,p.size,0,Math.PI*2);
-        fwCtx.fill();
-
-        if(p.age>=p.life) fwParticles.splice(i,1);
-      }
-      requestAnimationFrame(fwTick);
-    }
-
-    function startFireworks(ms){
-      if(!fwRunning){ fwRunning = true; fwTick(); }
-      const inter = setInterval(fwBurst, 360);
-      fwBurst(); fwBurst();
-      setTimeout(()=>{
-        clearInterval(inter);
-        setTimeout(()=>{
-          fwParticles = [];
-          fwCtx.clearRect(0,0,fw.width,fw.height);
-          fwRunning = false;
-        }, 1200);
-      }, ms);
-    }
-
-    /* ---------- Confetti rain (canvas) ---------- */
-    const cf = document.getElementById("fxConfetti");
-    const cfCtx = cf.getContext("2d");
-    function resizeCF(){ cf.width = innerWidth; cf.height = innerHeight; }
-    addEventListener("resize", resizeCF); resizeCF();
-
-    let cfPieces = [];
-    let cfRunning = false;
-    function makeConfetti(){
-      const count = 140;
-      for(let i=0;i<count;i++){
-        cfPieces.push({
-          x: Math.random()*cf.width,
-          y: -20 - Math.random()*cf.height*0.2,
-          w: 6 + Math.random()*8,
-          h: 8 + Math.random()*10,
-          vy: 2.4 + Math.random()*3.2,
-          vx: -1.2 + Math.random()*2.4,
-          rot: Math.random()*Math.PI*2,
-          vr: -0.08 + Math.random()*0.16,
-          hue: Math.random()<0.6 ? (330 + Math.random()*30) : (280 + Math.random()*80),
-          life: 220 + Math.random()*180
-        });
-      }
-    }
-    function cfTick(){
-      if(!cfRunning) return;
-      cfCtx.clearRect(0,0,cf.width,cf.height);
-
-      for(let i=cfPieces.length-1;i>=0;i--){
-        const p = cfPieces[i];
-        p.life--;
-        p.x += p.vx;
-        p.y += p.vy;
-        p.rot += p.vr;
-
-        const a = Math.max(0, Math.min(1, p.life/240));
-        cfCtx.save();
-        cfCtx.translate(p.x, p.y);
-        cfCtx.rotate(p.rot);
-        cfCtx.fillStyle = `hsla(${p.hue}, 95%, 70%, ${a})`;
-        cfCtx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
-        cfCtx.restore();
-
-        if(p.y > cf.height + 40 || p.life <= 0) cfPieces.splice(i,1);
-      }
-      requestAnimationFrame(cfTick);
-    }
-    function startConfetti(ms){
-      makeConfetti();
-      if(!cfRunning){ cfRunning = true; cfTick(); }
-      setTimeout(()=>{
-        cfRunning = false;
-        cfPieces = [];
-        cfCtx.clearRect(0,0,cf.width,cf.height);
-      }, ms);
-    }
-
-    /* ---------- Safety: keep NO visible on rotate/resize ---------- */
-    addEventListener("resize", () => {
-      if(noBtn.style.position === "fixed"){
-        // nudge back into view if needed
-        const r = noBtn.getBoundingClientRect();
-        const x = clamp(r.left, 12, window.innerWidth - r.width - 12);
-        const y = clamp(r.top,  12, window.innerHeight - r.height - 12);
-        noBtn.style.left = x + "px";
-        noBtn.style.top  = y + "px";
-      }
-    });
+    setTimeout(()=> startConfetti(700), 400);
   </script>
 </body>
 </html>
