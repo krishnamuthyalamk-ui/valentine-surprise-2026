@@ -8,218 +8,165 @@
 <style>
 body{
   margin:0;
+  font-family:system-ui;
   height:100vh;
   display:flex;
-  justify-content:center;
   align-items:center;
-  font-family:system-ui;
-  background:linear-gradient(135deg,#3b0a45,#8e2a5a,#ff4fa6);
+  justify-content:center;
+  background:linear-gradient(135deg,#3b1a7a,#7a1537);
   overflow:hidden;
   color:white;
 }
 
 .card{
-  background:rgba(255,255,255,0.1);
+  background:rgba(255,255,255,0.12);
   backdrop-filter:blur(20px);
-  padding:40px;
+  padding:40px 30px;
   border-radius:25px;
   text-align:center;
   width:90%;
   max-width:420px;
-  box-shadow:0 30px 60px rgba(0,0,0,0.4);
+  box-shadow:0 25px 80px rgba(0,0,0,0.6);
   position:relative;
+  transition:0.4s;
 }
 
 h1{
-  margin:0;
+  margin:0 0 20px;
   font-size:28px;
-  font-weight:800;
-}
-
-.question{
-  margin-top:20px;
-  font-size:22px;
-  font-weight:700;
-}
-
-.buttons{
-  margin-top:30px;
-  position:relative;
 }
 
 button{
-  padding:12px 28px;
+  padding:12px 25px;
   border:none;
-  border-radius:30px;
+  border-radius:50px;
   font-size:16px;
-  font-weight:bold;
+  font-weight:600;
   cursor:pointer;
   transition:0.3s;
-  margin:10px;
+  position:relative;
 }
 
-.yes{
-  background:white;
-  color:#d63384;
-  box-shadow:0 0 20px rgba(255,255,255,0.5);
-}
-
-.yes:disabled{
-  opacity:0.5;
-  cursor:not-allowed;
-}
-
-.no{
-  background:rgba(255,255,255,0.3);
+#yesBtn{
+  background:linear-gradient(90deg,#ff9ad5,#ff4fa3);
   color:white;
-  position:absolute;
+  opacity:0.5;
+  pointer-events:none;
 }
 
-.popup{
-  font-size:14px;
+#noBtn{
+  background:white;
+  color:#7a1537;
+  margin-left:10px;
+}
+
+.pop{
   margin-top:10px;
-  color:#ffd6f5;
-  height:20px;
+  font-size:14px;
+  color:#ffd6ec;
+  min-height:20px;
 }
 
 .overlay{
   position:fixed;
   inset:0;
+  background:rgba(0,0,0,0.8);
   display:none;
-  justify-content:center;
   align-items:center;
-  background:rgba(0,0,0,0.7);
-}
-
-.modal{
-  background:linear-gradient(135deg,#ff4fa6,#ff77c8);
-  padding:40px;
-  border-radius:30px;
+  justify-content:center;
+  flex-direction:column;
   text-align:center;
-  animation:pop 0.5s ease;
-  box-shadow:0 0 40px rgba(255,100,200,0.7);
+  padding:20px;
 }
 
-@keyframes pop{
-  from{transform:scale(0.6);opacity:0;}
-  to{transform:scale(1);opacity:1;}
+.overlay h2{
+  font-size:30px;
+  margin-bottom:15px;
 }
 
-.heart{
-  font-size:50px;
-  animation:beat 1s infinite;
-}
-
-@keyframes beat{
-  0%{transform:scale(1);}
-  50%{transform:scale(1.2);}
-  100%{transform:scale(1);}
-}
-
-canvas{
+.confetti{
   position:fixed;
-  inset:0;
-  pointer-events:none;
+  width:8px;
+  height:8px;
+  background:pink;
+  top:-10px;
+  animation:fall 3s linear forwards;
+}
+
+@keyframes fall{
+  to{ transform:translateY(100vh) rotate(720deg); }
 }
 </style>
 </head>
 
 <body>
 
-<canvas id="confetti"></canvas>
-
 <div class="card">
-  <h1>Seraine ❤️</h1>
-  <div class="question">Will you be my Valentine?</div>
+  <h1>Will you be my Valentine? 💗</h1>
 
-  <div class="buttons">
-    <button class="yes" id="yesBtn" disabled>Yes</button>
-    <button class="no" id="noBtn">No</button>
-  </div>
+  <button id="yesBtn">Yes</button>
+  <button id="noBtn">No</button>
 
-  <div class="popup" id="popupMsg"></div>
+  <div class="pop" id="popText"></div>
 </div>
 
 <div class="overlay" id="overlay">
-  <div class="modal">
-    <div class="heart">❤️</div>
-    <h2>You just made my world brighter ✨</h2>
-    <p>I love you so much Seraine 💖</p>
-  </div>
+  <h2>She said YES ❤️</h2>
+  <p>You just made my whole world brighter ✨</p>
+  <p>I love you Raine 💕</p>
 </div>
 
-<audio id="loveSong" src="Love.mp3"></audio>
-
 <script>
-
 let noCount=0;
 const noBtn=document.getElementById("noBtn");
 const yesBtn=document.getElementById("yesBtn");
-const popup=document.getElementById("popupMsg");
+const popText=document.getElementById("popText");
+const overlay=document.getElementById("overlay");
 
 const messages=[
 "Think about it… again 😏",
-"No? really? 😌"
+"No? really? 😌",
+"Try again Raine💗",
+"Your heart is not saying truth 🙈",
+"One more time 😇",
+"Come onnn 😘"
 ];
 
 noBtn.addEventListener("click",()=>{
   if(noCount<2){
-    popup.innerText=messages[noCount];
+    popText.textContent=messages[noCount];
     moveButton();
     noCount++;
-  }
-  if(noCount===2){
-    yesBtn.disabled=false;
+    if(noCount===2){
+      yesBtn.style.opacity="1";
+      yesBtn.style.pointerEvents="auto";
+    }
   }
 });
 
 function moveButton(){
-  const card=document.querySelector(".card");
-  const rect=card.getBoundingClientRect();
-  const maxX=rect.width-100;
-  const maxY=rect.height-50;
-  noBtn.style.left=Math.random()*maxX+"px";
-  noBtn.style.top=Math.random()*maxY+"px";
+  const x=Math.random()*80-40;
+  const y=Math.random()*40-20;
+  noBtn.style.transform=`translate(${x}px,${y}px)`;
 }
 
 yesBtn.addEventListener("click",()=>{
-  document.getElementById("overlay").style.display="flex";
-  document.getElementById("loveSong").play();
+  overlay.style.display="flex";
   startConfetti();
 });
 
 function startConfetti(){
-  const canvas=document.getElementById("confetti");
-  const ctx=canvas.getContext("2d");
-  canvas.width=window.innerWidth;
-  canvas.height=window.innerHeight;
-  let pieces=[];
-  for(let i=0;i<150;i++){
-    pieces.push({
-      x:Math.random()*canvas.width,
-      y:Math.random()*canvas.height,
-      r:Math.random()*6+4,
-      d:Math.random()*150
-    });
+  for(let i=0;i<120;i++){
+    const conf=document.createElement("div");
+    conf.className="confetti";
+    conf.style.left=Math.random()*100+"vw";
+    conf.style.background=`hsl(${Math.random()*360},100%,70%)`;
+    conf.style.animationDuration=(Math.random()*2+2)+"s";
+    document.body.appendChild(conf);
+    setTimeout(()=>conf.remove(),4000);
   }
-  function draw(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle="pink";
-    pieces.forEach(p=>{
-      ctx.beginPath();
-      ctx.arc(p.x,p.y,p.r,0,Math.PI*2,true);
-      ctx.fill();
-      p.y+=2;
-      if(p.y>canvas.height){
-        p.y=0;
-        p.x=Math.random()*canvas.width;
-      }
-    });
-    requestAnimationFrame(draw);
-  }
-  draw();
 }
-
 </script>
+
 </body>
 </html>
